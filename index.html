@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>マイクラ便利ツール集</title>
+<style>
+:root{--bg:#f4f1ea;--card:#fff;--text:#222;--sub:#666;--line:#ddd;--ac:#3f8f3a;--ac2:#b8341f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1b1b;--card:#262626;--text:#eee;--sub:#aaa;--line:#444;--ac:#6fcf68;--ac2:#ff7a60}}
+:root[data-theme="dark"]{--bg:#1b1b1b;--card:#262626;--text:#eee;--sub:#aaa;--line:#444;--ac:#6fcf68;--ac2:#ff7a60}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.6}
+main{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.4rem;margin:0 0 12px}
+nav{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px}
+nav button{white-space:nowrap;padding:8px 12px;border:1px solid var(--line);border-radius:20px;background:var(--card);color:var(--text);cursor:pointer;font-size:.9rem}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.tool{display:none;background:var(--card);border:1px solid var(--line);border-top:5px solid var(--ac);border-radius:10px;padding:14px}
+.tool.on{display:block}
+h2{margin:0 0 4px;font-size:1.1rem}
+.desc{color:var(--sub);font-size:.85rem;margin:0 0 12px}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.row.two{grid-template-columns:1fr 1fr}
+label{font-size:.8rem;color:var(--sub);display:block}
+input,select{width:100%;box-sizing:border-box;font-size:1rem;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text)}
+.sub{font-weight:700;margin:10px 0 4px;font-size:.9rem}
+.out{margin-top:12px;border-top:1px dashed var(--line);padding-top:8px}
+.out div{display:flex;justify-content:space-between;gap:8px;padding:3px 0;font-size:.95rem}
+.out b{color:var(--ac2);text-align:right}
+.note{font-size:.78rem;color:var(--sub);margin-top:8px}
+</style>
+</head>
+<body>
+<main>
+<h1>⛏ マイクラ便利ツール集</h1>
+<nav id="nav"></nav>
+
+<section class="tool" id="t-conv" data-title="🔁 座標変換">
+  <h2>オーバーワールド ⇔ ネザー</h2>
+  <p class="desc">どちらかに入力すると、もう一方が自動で計算されます。</p>
+  <div class="sub">🌳 オーバーワールド</div>
+  <div class="row"><div><label>X</label><input type="number" id="ox"></div><div><label>Y</label><input type="number" id="oy"></div><div><label>Z</label><input type="number" id="oz"></div></div>
+  <div class="sub">🔥 ネザー</div>
+  <div class="row"><div><label>X</label><input type="number" id="nx"></div><div><label>Y</label><input type="number" id="ny"></div><div><label>Z</label><input type="number" id="nz"></div></div>
+  <div class="note">OW→ネザーは X・Z を 8 で割って切り捨て、ネザー→OW は 8 倍。Y は変わりません。</div>
+</section>
+
+<section class="tool" id="t-dist" data-title="📏 距離・移動時間">
+  <h2>2点間の距離と移動時間</h2>
+  <p class="desc">Y は空欄でもOK(空欄なら水平距離のみ)。</p>
+  <div class="sub">地点A</div>
+  <div class="row"><div><label>X</label><input type="number" id="ax"></div><div><label>Y</label><input type="number" id="ay"></div><div><label>Z</label><input type="number" id="az"></div></div>
+  <div class="sub">地点B</div>
+  <div class="row"><div><label>X</label><input type="number" id="bx"></div><div><label>Y</label><input type="number" id="by"></div><div><label>Z</label><input type="number" id="bz"></div></div>
+  <div class="out" id="dout"></div>
+  <div class="note">時間は水平の直線距離での目安です(歩き 4.3 / ダッシュ 5.6 / ボート 8 / 氷上ボート 40 / 青氷ボート 72.7 ブロック毎秒)。</div>
+</section>
+
+<section class="tool" id="t-chunk" data-title="🧱 チャンク">
+  <h2>チャンク計算</h2>
+  <p class="desc">座標からチャンク位置とリージョンファイルを調べます。</p>
+  <div class="row two"><div><label>X</label><input type="number" id="cx"></div><div><label>Z</label><input type="number" id="cz"></div></div>
+  <div class="out" id="cout"></div>
+</section>
+
+<section class="tool" id="t-stack" data-title="📦 スタック">
+  <h2>スタック数・チェスト計算</h2>
+  <p class="desc">アイテム数を、スタック・チェスト・シュルカーボックスに換算します。</p>
+  <div class="row two"><div><label>アイテム数</label><input type="number" id="sn" min="0"></div>
+  <div><label>最大スタック数</label><select id="ss"><option value="64">64(多くのアイテム)</option><option value="16">16(エンダーパール等)</option><option value="1">1(道具など)</option></select></div></div>
+  <div class="out" id="sout"></div>
+  <div class="note">チェスト 27 スロット、ラージチェスト 54 スロット、シュルカーボックス 27 スロット。</div>
+</section>
+
+<section class="tool" id="t-circle" data-title="⭕ 円・球">
+  <h2>円・球の建築ブロック数の目安</h2>
+  <p class="desc">直径から、円の外周・面積・球の体積のおおよそのブロック数を出します。</p>
+  <div><label>直径(ブロック)</label><input type="number" id="dd" min="1"></div>
+  <div class="out" id="rout"></div>
+  <div class="note">実際のブロック配置とは数ブロックずれる目安値です。</div>
+</section>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const n=id=>{const v=$(id).value;return v===''||isNaN(+v)?null:+v};
+const f=(v,d=1)=>Number.isFinite(v)?v.toLocaleString('ja-JP',{maximumFractionDigits:d}):'-';
+const show=(el,rows)=>$(el).innerHTML=rows.map(r=>`<div><span>${r[0]}</span><b>${r[1]}</b></div>`).join('');
+
+// tabs
+const tools=[...document.querySelectorAll('.tool')];
+tools.forEach((t,i)=>{
+  const b=document.createElement('button');b.textContent=t.dataset.title;
+  b.onclick=()=>{tools.forEach(x=>x.classList.remove('on'));[...$('nav').children].forEach(x=>x.classList.remove('on'));t.classList.add('on');b.classList.add('on');try{location.hash=t.id}catch(e){}};
+  $('nav').appendChild(b);
+  if(i===0||('#'+t.id)===location.hash)b.click();
+});
+
+// converter
+function sync(from){
+  const s=from==='o'?['ox','oy','oz']:['nx','ny','nz'],d=from==='o'?['nx','ny','nz']:['ox','oy','oz'];
+  const [x,y,z]=s.map(n);
+  const c=v=>v===null?'':(from==='o'?Math.floor(v/8):v*8);
+  $(d[0]).value=c(x);$(d[1]).value=y===null?'':y;$(d[2]).value=c(z);
+}
+['ox','oy','oz'].forEach(i=>$(i).oninput=()=>sync('o'));
+['nx','ny','nz'].forEach(i=>$(i).oninput=()=>sync('n'));
+
+// distance
+function dist(){
+  const [ax,ay,az,bx,by,bz]=['ax','ay','az','bx','by','bz'].map(n);
+  if([ax,az,bx,bz].includes(null)){$('dout').innerHTML='';return}
+  const dx=bx-ax,dz=bz-az,h=Math.hypot(dx,dz);
+  const rows=[['水平距離(直線)',f(h)+' ブロック']];
+  if(ay!==null&&by!==null){rows.push(['3D 直線距離',f(Math.hypot(dx,dz,by-ay))+' ブロック']);rows.push(['高低差',f(Math.abs(by-ay),0)+' ブロック'])}
+  rows.push(['マンハッタン距離(X+Z)',f(Math.abs(dx)+Math.abs(dz),0)+' ブロック']);
+  rows.push(['ネザー経由の移動量(1/8)',f(h/8)+' ブロック']);
+  const t=(s)=>{const sec=h/s;return sec>=60?Math.floor(sec/60)+'分'+Math.round(sec%60)+'秒':f(sec)+'秒'};
+  rows.push(['歩き',t(4.317)],['ダッシュ',t(5.612)],['ボート',t(8)],['氷上ボート',t(40)],['青氷ボート',t(72.7)]);
+  show('dout',rows);
+}
+['ax','ay','az','bx','by','bz'].forEach(i=>$(i).oninput=dist);
+
+// chunk
+function chunk(){
+  const x=n('cx'),z=n('cz');
+  if(x===null||z===null){$('cout').innerHTML='';return}
+  const X=Math.floor(x),Z=Math.floor(z),cx=Math.floor(X/16),cz=Math.floor(Z/16);
+  show('cout',[['チャンク座標',`${cx}, ${cz}`],['チャンク内位置',`${X-cx*16}, ${Z-cz*16}`],
+  ['チャンクの範囲 X',`${cx*16} 〜 ${cx*16+15}`],['チャンクの範囲 Z',`${cz*16} 〜 ${cz*16+15}`],
+  ['チャンク中心',`${cx*16+8}, ${cz*16+8}`],['リージョンファイル',`r.${Math.floor(cx/32)}.${Math.floor(cz/32)}.mca`]]);
+}
+['cx','cz'].forEach(i=>$(i).oninput=chunk);
+
+// stacks
+function stack(){
+  const v=n('sn'),s=+$('ss').value;
+  if(v===null||v<0){$('sout').innerHTML='';return}
+  const c=Math.floor(v);const full=Math.floor(c/s),rem=c%s,slots=Math.ceil(c/s);
+  show('sout',[['スタック',s===1?`${f(c,0)} 個`:`${f(full,0)} スタック + ${rem} 個`],['必要スロット',f(slots,0)],
+  ['チェスト',f(slots/27,2)+' 個分'],['ラージチェスト',f(slots/54,2)+' 個分'],['シュルカーボックス',f(slots/27,2)+' 個分']]);
+}
+$('sn').oninput=stack;$('ss').onchange=stack;
+
+// circle
+function circ(){
+  const d=n('dd');
+  if(d===null||d<=0){$('rout').innerHTML='';return}
+  const r=d/2;
+  show('rout',[['円の外周(目安)',f(Math.PI*d,0)+' ブロック'],['円の面積(塗りつぶし)',f(Math.PI*r*r,0)+' ブロック'],
+  ['球の体積(塗りつぶし)',f(4/3*Math.PI*r**3,0)+' ブロック'],['球の表面積(殻)',f(4*Math.PI*r*r,0)+' ブロック']]);
+}
+$('dd').oninput=circ;
+</script>
+</body>
+</html>
