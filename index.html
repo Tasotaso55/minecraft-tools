@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>マイクラ座標変換 オーバーワールド⇔ネザー</title>
+<style>
+:root{--bg:#f4f1ea;--card:#fff;--text:#222;--sub:#666;--line:#ddd;--ow:#3f8f3a;--nt:#b8341f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1b1b;--card:#262626;--text:#eee;--sub:#aaa;--line:#444;--ow:#6fcf68;--nt:#ff7a60}}
+:root[data-theme="dark"]{--bg:#1b1b1b;--card:#262626;--text:#eee;--sub:#aaa;--line:#444;--ow:#6fcf68;--nt:#ff7a60}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,"Hiragino Sans","Yu Gothic",sans-serif;line-height:1.6}
+main{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.4rem;margin:0 0 4px}
+p.lead{color:var(--sub);margin:0 0 18px;font-size:.9rem}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-top:5px solid var(--c);border-radius:10px;padding:14px}
+.card h2{margin:0 0 10px;font-size:1.05rem;color:var(--c)}
+.ow{--c:var(--ow)}.nt{--c:var(--nt)}
+label{display:flex;align-items:center;gap:8px;margin:8px 0;font-weight:600}
+label span{width:1.2em}
+input{flex:1;min-width:0;font-size:1.05rem;padding:8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text)}
+button{margin-top:8px;padding:8px 12px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text);cursor:pointer;font-size:.9rem}
+.note{margin-top:18px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 16px;font-size:.88rem;color:var(--sub)}
+.note b{color:var(--text)}
+#range{font-size:.8rem;color:var(--sub);margin-top:6px;min-height:1.2em}
+</style>
+</head>
+<body>
+<main>
+<h1>⛏ マイクラ座標変換</h1>
+<p class="lead">どちらかに入力すると、もう一方が自動で計算されます。</p>
+<div class="grid">
+  <section class="card ow">
+    <h2>🌳 オーバーワールド</h2>
+    <label><span>X</span><input id="ox" type="number" inputmode="numeric" placeholder="0"></label>
+    <label><span>Y</span><input id="oy" type="number" inputmode="numeric" placeholder="64"></label>
+    <label><span>Z</span><input id="oz" type="number" inputmode="numeric" placeholder="0"></label>
+    <button data-copy="o">コピー</button>
+  </section>
+  <section class="card nt">
+    <h2>🔥 ネザー</h2>
+    <label><span>X</span><input id="nx" type="number" inputmode="numeric" placeholder="0"></label>
+    <label><span>Y</span><input id="ny" type="number" inputmode="numeric" placeholder="64"></label>
+    <label><span>Z</span><input id="nz" type="number" inputmode="numeric" placeholder="0"></label>
+    <button data-copy="n">コピー</button>
+    <div id="range"></div>
+  </section>
+</div>
+<div class="note">
+  <b>変換ルール</b><br>
+  オーバーワールド → ネザー：X・Z を 8 で割り、小数点以下を切り捨て<br>
+  ネザー → オーバーワールド：X・Z を 8 倍<br>
+  Y 座標は変換されません（ネザーの高さは 0〜127、天井の岩盤は 127）。<br>
+  ※ネザーゲートは近くの既存ゲートを探し、なければ新規作成します。ネザー→オーバーワールドは 8 倍で 8 ブロック分の誤差が出るため、ゲートがずれることがあります。
+</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const ow=['ox','oy','oz'],nt=['nx','ny','nz'];
+const num=v=>v===''||isNaN(+v)?null:+v;
+function sync(from){
+  const src=from==='o'?ow:nt,dst=from==='o'?nt:ow;
+  const [x,y,z]=src.map(i=>num($(i).value));
+  const f=v=>v===null?'':(from==='o'?Math.floor(v/8):v*8);
+  $(dst[0]).value=f(x);$(dst[2]).value=f(z);
+  $(dst[1]).value=y===null?'':y;
+  const r=$('range');
+  r.textContent=(from==='n'&&x!==null&&z!==null)?`※実際の対応範囲：X ${x*8}〜${x*8+7} / Z ${z*8}〜${z*8+7}`:'';
+}
+ow.forEach(i=>$(i).addEventListener('input',()=>sync('o')));
+nt.forEach(i=>$(i).addEventListener('input',()=>sync('n')));
+document.querySelectorAll('[data-copy]').forEach(b=>b.addEventListener('click',()=>{
+  const ids=b.dataset.copy==='o'?ow:nt;
+  const t=ids.map(i=>$(i).value||0).join(' ');
+  try{navigator.clipboard.writeText(t);b.textContent='コピーしました';}catch(e){b.textContent=t;}
+  setTimeout(()=>b.textContent='コピー',1500);
+}));
+</script>
+</body>
+</html>
