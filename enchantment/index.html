@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>マイクラ エンチャント一覧｜最大レベル・対象・競合早見表</title>
+<meta name="description" content="マイクラ(Java版)のエンチャントの最大レベル・付けられる装備・競合するエンチャントを一覧で確認できる早見表。防具・剣・ツール・弓などで絞り込み検索。">
+<meta property="og:title" content="マイクラ エンチャント一覧｜最大レベル・対象・競合早見表">
+<meta property="og:description" content="マイクラ(Java版)のエンチャントの最大レベル・付けられる装備・競合するエンチャントを一覧で確認できる早見表。防具・剣・ツール・弓などで絞り込み検索。">
+<meta property="og:type" content="website">
+<link rel="stylesheet" href="../css/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "「宝」マークとは?", "acceptedAnswer": {"@type": "Answer", "text": "エンチャントテーブルでは付かず、宝箱・釣り・村人との取引などで手に入るエンチャントです。"}}, {"@type": "Question", "name": "修繕と無限は同時に付けられますか?", "acceptedAnswer": {"@type": "Answer", "text": "Java版では付けられません(競合)。「競合」欄で確認できます。"}}]}</script>
+</head>
+<body>
+<header class="site"><a class="brand" href="../">⛏ マイクラ便利ツール集</a><nav class="gnav" aria-label="ツール一覧"><a href="../circle/">⭕ 円・球生成器</a><a href="../nether/">🔁 ネザー座標計算</a><a href="../stack/">📦 スタック計算</a><a href="../chunk/">🧱 チャンク計算</a><a href="../distance/">📏 距離計算</a><a href="../enchantment/" aria-current="page">✨ エンチャント一覧</a><a href="../memo/">📍 座標メモ</a></nav></header>
+<main>
+<ol class="crumb"><li><a href="../">トップ</a></li><li>エンチャント一覧</li></ol>
+<h1>マイクラ エンチャント一覧</h1>
+<p class="lead">エンチャントの名前(日本語・英語)で検索したり、装備の種類で絞り込んだりして、最大レベルと競合を確認できます。</p>
+<section class="tool on" id="t-ench" data-title="✨ エンチャント">
+  <h2>エンチャント一覧</h2>
+  <p class="desc">最大レベル・付けられるもの・競合するエンチャントを確認できます。</p>
+  <input type="search" id="eq" placeholder="名前で検索(例:修繕、Mending)">
+  <div class="chips" id="echips"></div>
+  <div class="egrid" id="elist"></div>
+  <div class="note">Java版1.21前後の情報です。バージョンにより変更される場合があります。「宝」は通常のエンチャントテーブルでは出ず、宝箱・釣り・取引などで入手します。</div>
+</section>
+<section class="info"><h2>使い方</h2><ol><li>検索欄に名前を入力するか、カテゴリのボタンを押します。</li><li>各エンチャントの最大レベルと対象を確認します。</li><li>「競合」欄で、同時に付けられない組み合わせを確認します。</li></ol></section>
+<section class="info"><h2>よくある質問</h2><dl><dt>「宝」マークとは?</dt><dd>エンチャントテーブルでは付かず、宝箱・釣り・村人との取引などで手に入るエンチャントです。</dd><dt>修繕と無限は同時に付けられますか?</dt><dd>Java版では付けられません(競合)。「競合」欄で確認できます。</dd></dl></section>
+<section class="info"><h2>ほかのマイクラツール</h2><div class="cards"><a class="cl" href="../stack/"><b>📦 スタック計算</b><span>スタック・チェスト・シュルカー換算</span></a><a class="cl" href="../circle/"><b>⭕ 円・球生成器</b><span>円・楕円・球・ドームのブロック配置と必要数</span></a><a class="cl" href="../nether/"><b>🔁 ネザー座標計算</b><span>オーバーワールドとネザーの座標変換・コピー</span></a><a class="cl" href="../distance/"><b>📏 距離計算</b><span>2点間の距離と移動時間の目安</span></a></div></section>
+</main>
+<footer><a href="../">トップ</a> ・ マイクラ便利ツール集 ・ 非公式ツールです。Minecraft は Mojang Studios / Microsoft の商標です。</footer>
+<script src="../js/common.js"></script>
+<script src="../js/enchantment.js"></script>
+</body>
+</html>
