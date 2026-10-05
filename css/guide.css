@@ -5,3 +5,8 @@
 .g-table th{background:rgba(128,128,128,.14)}
 .g-formula{margin:10px 0;padding:10px 14px;border-left:4px solid rgba(128,128,128,.6);background:rgba(128,128,128,.12);border-radius:4px;overflow-x:auto}
 .g-note{margin:10px 0;padding:10px 14px;border:1px dashed rgba(128,128,128,.6);border-radius:4px;font-size:.93em}
+
+/* タップしやすさの改善(スマホ): 小さいボタン・ナビを押しやすく */
+.sm{min-height:40px;padding:6px 12px}
+.gnav a{display:inline-flex;align-items:center;min-height:38px}
+.chips .sm{min-height:36px}
